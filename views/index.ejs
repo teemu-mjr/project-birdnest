@@ -5,10 +5,26 @@
   <title></title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script>
+    $.ajax({
+      type: 'GET',
+      url: '/api/pilots',
+      success: function (result) {
+        $('#pilots').html(result.map((pilot) => {
+          return `
+            <li>${pilot.firstName}</li
+          `
+        }));
+      }
+    });
+  </script>
 </head>
 
 <body>
   <h1>Welcome to drone traker</h1>
+  <div id="pilots">
+  </div>
 </body>
 
 </html>

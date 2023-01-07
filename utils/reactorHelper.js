@@ -1,12 +1,23 @@
 const axios = require("axios");
 const xml2js = require("xml2js");
 
+class Vector2D {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  calcDistance(vec) {
+    const diff = new Vector2D(vec.x - this.x, vec.y - this.y);
+    const len = Math.sqrt(Math.pow(diff.x, 2) + Math.pow(diff.y, 2));
+    return len;
+  }
+}
+
 class Drone {
-  constructor(serialNumber, positionY, positionX, altitude) {
+  constructor(serialNumber, positionX, positionY) {
     this.serialNumber = serialNumber;
-    this.positionY = positionY;
-    this.positionX = positionX;
-    this.altitude = altitude;
+    this.pos = new Vector2D(positionX, positionY);
   }
 }
 
@@ -34,14 +45,12 @@ const fetchDrones = async () => {
       const newDrone = new Drone(
         drone.serialNumber[0],
         drone.positionY[0],
-        drone.positionX[0],
-        drone.altitude[0]
+        drone.positionX[0]
       );
       newDrones.push(newDrone);
     });
     Drones = newDrones;
   });
-  console.log(Drones);
 };
 
 const fetchPilot = async (serialNumber) => {
@@ -49,7 +58,6 @@ const fetchPilot = async (serialNumber) => {
     `https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`
   );
   const pilotData = pilotResult.data;
-  console.log(pilotData)
 
   const newPilot = new Pilot(
     pilotData.pilotId,
@@ -61,3 +69,28 @@ const fetchPilot = async (serialNumber) => {
   );
   return newPilot;
 };
+
+const isNaughty = (drone) => {
+  const distanceToNest = drone.pos.calcDistance(new Vector2D(250000, 250000));
+  if (distanceToNest < 100000) {
+    return true;
+  }
+  return false;
+};
+
+const detectionLoop = async () => {
+  await fetchDrones();
+  for (let i = 0; i < Drones.length; i++) {
+    console.log("drone:", Drones[i].serialNumber);
+    console.log("isNaughty:", isNaughty(Drones[i]));
+    console.log("--------");
+  }
+};
+
+const startInterval = async () => {
+  setInterval(() => {
+    detectionLoop();
+  }, 5000);
+};
+
+startInterval();

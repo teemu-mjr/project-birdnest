@@ -1,16 +1,9 @@
-const testArr = [
-  {
-    firstName: "pilot1",
-  },
-  {
-    firstName: "pilot2",
-  },
-];
+const reactorHelper = require("../utils/reactorHelper");
 
-function getAll(_req, res) {
-  res.status(200).json(testArr);
+function getNaughty(_req, res) {
+  res.status(200).json(reactorHelper.getNaughtyPilots());
 }
 
 module.exports = {
-  getAll,
+  getNaughty,
 };

@@ -20,6 +20,7 @@ app.get("/", (_req, res) => {
   res.render("index");
 });
 app.use("/api/pilots", pilotsRouter);
+app.use(express.static("public"));
 
 server.listen(config.PORT, () => {
   console.log(`listening on ${config.PORT}`);

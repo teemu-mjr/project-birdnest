@@ -110,9 +110,9 @@ const pardonPilots = () => {
   Pilots.forEach((p) => {
     const diff = new Date() - p.lastRuleBrake;
     const diffMin = Math.floor(diff / 1000 / 60);
-    if (p.naughty && diffMin > 10) {
+    if (p.isNaughty && diffMin >= 10) {
       console.log(p.firstName, ":", new Date() - p.lastRuleBrake);
-      p.naughty = false;
+      p.isNaughty = false;
       console.log(p.firstName, "removed");
     }
   });

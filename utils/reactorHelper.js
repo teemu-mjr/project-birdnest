@@ -29,6 +29,8 @@ class Pilot {
     this.phoneNumber = phoneNumber;
     this.email = email;
     this.droneSerial = droneSerial;
+    this.isNaughty = false;
+    this.lastRuleBrake = new Date();
   }
 }
 
@@ -78,19 +80,49 @@ const isNaughty = (drone) => {
   return false;
 };
 
-const detectionLoop = async () => {
-  await fetchDrones();
-  for (let i = 0; i < Drones.length; i++) {
-    console.log("drone:", Drones[i].serialNumber);
-    console.log("isNaughty:", isNaughty(Drones[i]));
-    console.log("--------");
+const updateNaughtyPilots = async () => {
+  for (let i = 0; i < Drones.length; ++i) {
+    if (!isNaughty(Drones[i])) {
+      continue;
+    }
+
+    const pilot = Pilots.find((p) => {
+      return p.droneSerial === Drones[i].serialNumber;
+    });
+    if (pilot) {
+      console.log("update:", pilot.firstName);
+      pilot.lastRuleBrake = new Date();
+      pilot.isNaughty = true;
+    } else {
+      console.log("get info:");
+      const pilotInfo = await fetchPilot(Drones[i].serialNumber);
+      Pilots.push({
+        ...pilotInfo,
+        droneSerial: Drones[i].serialNumber,
+        lastRuleBrake: new Date(),
+        isNaughty: true,
+      });
+    }
   }
 };
 
-const startInterval = async () => {
-  setInterval(() => {
-    detectionLoop();
+const detectionLoop = async () => {
+  await fetchDrones();
+  await updateNaughtyPilots();
+  console.log("pilot len:", Pilots.length);
+  console.log("drone len:", Drones.length);
+  console.log("--------------");
+};
+
+const startInterval = async (callback) => {
+  setInterval(async () => {
+    await detectionLoop();
+    if (callback) {
+      callback();
+    }
   }, 5000);
 };
 
-startInterval();
+module.exports = {
+  startInterval,
+};

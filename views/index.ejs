@@ -6,18 +6,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
-    $.ajax({
-      type: 'GET',
-      url: '/api/pilots',
-      success: function (result) {
-        $('#pilots').html(result.map((pilot) => {
-          return `
-            <li>${pilot.firstName}</li
+    var socket = io();
+    socket.on("refresh", () => {
+      console.log("REFRESH");
+      $.ajax({
+        type: 'GET',
+        url: '/api/pilots',
+        success: (result) => {
+          $('#pilots').html(result.map((pilot) => {
+            return `
+              <li>${pilot.firstName}</li
           `
-        }));
-      }
-    });
+          }));
+        }
+      });
+    })
   </script>
 </head>
 

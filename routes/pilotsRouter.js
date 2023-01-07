@@ -1,7 +1,6 @@
 const pilotsRouter = require("express").Router();
+const pilotsController = require("../controllers/pilotsController");
 
-pilotsRouter.get("/", (_req, res) => {
-  res.send("pilots");
-});
+pilotsRouter.get("/", pilotsController.getAll);
 
 module.exports = pilotsRouter;

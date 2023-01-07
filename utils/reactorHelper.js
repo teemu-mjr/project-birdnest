@@ -10,7 +10,19 @@ class Drone {
   }
 }
 
+class Pilot {
+  constructor(pilotId, firstName, lastName, phoneNumber, email, droneSerial) {
+    this.pilotId = pilotId;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.phoneNumber = phoneNumber;
+    this.email = email;
+    this.droneSerial = droneSerial;
+  }
+}
+
 let Drones = [];
+let Pilots = [];
 
 const fetchDrones = async () => {
   const dronesResult = await axios.get(
@@ -30,4 +42,22 @@ const fetchDrones = async () => {
     Drones = newDrones;
   });
   console.log(Drones);
+};
+
+const fetchPilot = async (serialNumber) => {
+  const pilotResult = await axios.get(
+    `https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`
+  );
+  const pilotData = pilotResult.data;
+  console.log(pilotData)
+
+  const newPilot = new Pilot(
+    pilotData.pilotId,
+    pilotData.firstName,
+    pilotData.lastName,
+    pilotData.phoneNumber,
+    pilotData.email,
+    serialNumber
+  );
+  return newPilot;
 };

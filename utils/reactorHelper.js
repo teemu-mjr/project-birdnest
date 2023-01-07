@@ -106,9 +106,22 @@ const updateNaughtyPilots = async () => {
   }
 };
 
+const pardonPilots = () => {
+  Pilots.forEach((p) => {
+    const diff = new Date() - p.lastRuleBrake;
+    const diffMin = Math.floor(diff / 1000 / 60);
+    if (p.naughty && diffMin > 10) {
+      console.log(p.firstName, ":", new Date() - p.lastRuleBrake);
+      p.naughty = false;
+      console.log(p.firstName, "removed");
+    }
+  });
+};
+
 const detectionLoop = async () => {
   await fetchDrones();
   await updateNaughtyPilots();
+  pardonPilots();
   console.log("pilot len:", Pilots.length);
   console.log("drone len:", Drones.length);
   console.log("--------------");
@@ -123,6 +136,16 @@ const startInterval = async (callback) => {
   }, 5000);
 };
 
+const getAllPilots = () => {
+  return Pilots;
+};
+
+const getNaughtyPilots = () => {
+  return Pilots.filter((p) => p.isNaughty == true);
+};
+
 module.exports = {
   startInterval,
+  getAllPilots,
+  getNaughtyPilots,
 };

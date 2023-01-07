@@ -3,8 +3,10 @@ const app = express();
 
 const config = require("./utils/config");
 
+app.set("view engine", "ejs");
+
 app.get("/", (_req, res) => {
-  res.send("OK");
+  res.render("index");
 });
 
 app.listen(config.PORT, () => {

@@ -1,10 +1,12 @@
 const express = require("express");
 const app = express();
 
+const config = require("./utils/config");
+
 app.get("/", (_req, res) => {
   res.send("OK");
 });
 
-app.listen(1234, () => {
-  console.log("listening on 1234");
+app.listen(config.PORT, () => {
+  console.log(`listening on ${config.PORT}`);
 });

@@ -1,0 +1,27 @@
+{
+  "name": "project-birdnest",
+  "version": "1.0.0",
+  "description": "pre-assignment for Developer Trainee, summer 2023",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teemu-mjr/project-birdnest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teemu-mjr/project-birdnest/issues"
+  },
+  "homepage": "https://github.com/teemu-mjr/project-birdnest#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

@@ -9,9 +9,9 @@ const fetchNaughtyPilots = () => {
                <div class="card">
                 <div class="container">
                   <h4><b>${pilot.firstName} ${pilot.lastName}</b></h4>
-                  <p>${pilot.phoneNumber}</p>
+                  <p>phone: ${pilot.phoneNumber}</p>
+                  <p>email: ${pilot.email}</p>
                 </div>
-              </div>
               <div>
           `;
         })

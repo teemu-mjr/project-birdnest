@@ -36,6 +36,7 @@ class Pilot {
 
 let Drones = [];
 let Pilots = [];
+let ClosestDistance = null;
 
 const fetchDrones = async () => {
   const dronesResult = await axios.get(
@@ -75,6 +76,9 @@ const fetchPilot = async (serialNumber) => {
 const isNaughty = (drone) => {
   const distanceToNest = drone.pos.calcDistance(new Vector2D(250000, 250000));
   if (distanceToNest < 100000) {
+    if (ClosestDistance == null || distanceToNest < ClosestDistance) {
+      ClosestDistance = distanceToNest;
+    }
     return true;
   }
   return false;
@@ -94,8 +98,8 @@ const updateNaughtyPilots = async () => {
       pilot.lastRuleBrake = new Date();
       pilot.isNaughty = true;
     } else {
-      console.log("get info:");
       const pilotInfo = await fetchPilot(Drones[i].serialNumber);
+      console.log("get info:", pilotInfo.firstName);
       Pilots.push({
         ...pilotInfo,
         droneSerial: Drones[i].serialNumber,
@@ -136,16 +140,16 @@ const startInterval = async (callback) => {
   }, 5000);
 };
 
-const getAllPilots = () => {
-  return Pilots;
-};
-
 const getNaughtyPilots = () => {
   return Pilots.filter((p) => p.isNaughty == true);
 };
 
+const getClosestDistance = () => {
+  return ClosestDistance;
+};
+
 module.exports = {
   startInterval,
-  getAllPilots,
   getNaughtyPilots,
+  getClosestDistance,
 };

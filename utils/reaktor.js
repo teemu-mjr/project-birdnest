@@ -62,9 +62,14 @@ const fetchDrones = async () => {
 };
 
 const fetchPilot = async (serialNumber) => {
-  const pilotResult = await axios.get(
-    `https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`
-  );
+  const pilotResult = await axios
+    .get(`https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`)
+    .catch((err) => console.error(err));
+
+  if (!pilotResult) {
+    return console.error("failed to fetch pilot info");
+  }
+
   const pilotData = pilotResult.data;
 
   const newPilot = new Pilot(
@@ -102,6 +107,12 @@ const updateNaughtyPilots = async () => {
       pilot.isNaughty = true;
     } else {
       const pilotInfo = await fetchPilot(Drones[i].serialNumber);
+
+      if (!pilotInfo) {
+        console.error(`skipping pilot flying drone: ${Drones[i].serialNumber}`);
+        continue;
+      }
+
       console.log("get info:", pilotInfo.firstName);
       Pilots.push({
         ...pilotInfo,
@@ -118,7 +129,6 @@ const pardonPilots = () => {
     const diff = new Date() - p.lastRuleBrake;
     const diffMin = Math.floor(diff / 1000 / 60);
     if (p.isNaughty && diffMin >= 10) {
-      console.log(p.firstName, ":", new Date() - p.lastRuleBrake);
       p.isNaughty = false;
       console.log(p.firstName, "removed");
     }

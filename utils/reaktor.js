@@ -73,20 +73,18 @@ const fetchPilot = async (serialNumber) => {
   return newPilot;
 };
 
-const isNaughty = (drone) => {
-  const distanceToNest = drone.pos.calcDistance(new Vector2D(250000, 250000));
-  if (distanceToNest < 100000) {
-    if (ClosestDistance == null || distanceToNest < ClosestDistance) {
-      ClosestDistance = distanceToNest;
-    }
-    return true;
+const distanceToNest = (dronePos) => {
+  const nestPos = new Vector2D(250000, 250000);
+  const distance = dronePos.calcDistance(nestPos);
+  if (ClosestDistance == null || distance < ClosestDistance) {
+    ClosestDistance = distance;
   }
-  return false;
+  return distance;
 };
 
 const updateNaughtyPilots = async () => {
   for (let i = 0; i < Drones.length; ++i) {
-    if (!isNaughty(Drones[i])) {
+    if (distanceToNest(Drones[i].pos) < 100000) {
       continue;
     }
 

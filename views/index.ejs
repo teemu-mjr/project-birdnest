@@ -13,8 +13,10 @@
     var socket = io();
 
     fetchNaughtyPilots()
+    fetchClosestDistanceToNest()
     socket.on("refresh", () => {
       fetchNaughtyPilots()
+      fetchClosestDistanceToNest()
     })
   </script>
 </head>
@@ -23,6 +25,8 @@
   <h1>Developer Trainee, summer 2023</h1>
   <h2>Project Birdnest</h2>
   <hr>
+  <div id="closest">
+  </div>
   <h3>List of pilots who recently violated the NDZ perimeter</h3>
   <div id="pilots">
   </div>

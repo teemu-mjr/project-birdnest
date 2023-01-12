@@ -39,9 +39,14 @@ let Pilots = [];
 let ClosestDistance = null;
 
 const fetchDrones = async () => {
-  const dronesResult = await axios.get(
-    "https://assignments.reaktor.com/birdnest/drones"
-  );
+  const dronesResult = await axios
+    .get("https://assignments.reaktor.com/birdnest/drones")
+    .catch((err) => console.error(err));
+
+  if (!dronesResult) {
+    return console.error("failed to fetch drone info");
+  }
+
   xml2js.parseString(dronesResult.data, (_err, result) => {
     let newDrones = [];
     result.report.capture[0].drone.map((drone) => {

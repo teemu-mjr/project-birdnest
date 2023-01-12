@@ -1,10 +1,10 @@
-const reactorHelper = require("../utils/reactorHelper");
+const reaktorHelper = require("../utils/reaktor");
 
 const getNaughty = (_req, res) => {
-  res.status(200).json(reactorHelper.getNaughtyPilots());
+  res.status(200).json(reaktorHelper.getNaughtyPilots());
 };
 const getClosest = (_req, res) => {
-  const meters = (reactorHelper.getClosestDistance() / 1000).toFixed(2);
+  const meters = (reaktorHelper.getClosestDistance() / 1000).toFixed(2);
   res.status(200).json(meters);
 };
 

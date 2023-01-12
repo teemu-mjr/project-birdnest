@@ -5,8 +5,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
-const reactorHelper = require("./utils/reactorHelper");
-reactorHelper.startInterval(() => {
+const reaktorHelper = require("./utils/reaktor");
+reaktorHelper.startInterval(() => {
   io.emit("refresh");
 });
 

@@ -150,7 +150,7 @@ const startInterval = async (callback) => {
     if (callback) {
       callback();
     }
-  }, 5000);
+  }, 2000);
 };
 
 const getNaughtyPilots = () => {

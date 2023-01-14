@@ -1,6 +1,8 @@
 const axios = require("axios");
 const xml2js = require("xml2js");
 
+const logger = require("../utils/logger");
+
 class Vector2D {
   constructor(x, y) {
     this.x = x;
@@ -41,10 +43,10 @@ let ClosestDistance = null;
 const fetchDrones = async () => {
   const dronesResult = await axios
     .get("https://assignments.reaktor.com/birdnest/drones")
-    .catch((err) => console.error(err));
+    .catch((err) => logger.error(err));
 
   if (!dronesResult) {
-    return console.error("failed to fetch drone info");
+    return logger.error("failed to fetch drone info");
   }
 
   xml2js.parseString(dronesResult.data, (_err, result) => {
@@ -64,10 +66,10 @@ const fetchDrones = async () => {
 const fetchPilot = async (serialNumber) => {
   const pilotResult = await axios
     .get(`https://assignments.reaktor.com/birdnest/pilots/${serialNumber}`)
-    .catch((err) => console.error(err));
+    .catch((err) => logger.error(err));
 
   if (!pilotResult) {
-    return console.error("failed to fetch pilot info");
+    return logger.error("failed to fetch pilot info");
   }
 
   const pilotData = pilotResult.data;
@@ -102,18 +104,18 @@ const updateNaughtyPilots = async () => {
       return p.droneSerial === Drones[i].serialNumber;
     });
     if (pilot) {
-      console.log("update:", pilot.firstName);
+      logger.info("update:", pilot.firstName);
       pilot.lastRuleBrake = new Date();
       pilot.isNaughty = true;
     } else {
       const pilotInfo = await fetchPilot(Drones[i].serialNumber);
 
       if (!pilotInfo) {
-        console.error(`skipping pilot flying drone: ${Drones[i].serialNumber}`);
+        logger.error(`skipping pilot flying drone: ${Drones[i].serialNumber}`);
         continue;
       }
 
-      console.log("get info:", pilotInfo.firstName);
+      logger.info("get info:", pilotInfo.firstName);
       Pilots.push({
         ...pilotInfo,
         droneSerial: Drones[i].serialNumber,
@@ -134,7 +136,7 @@ const pardonPilots = () => {
     const diffMin = Math.floor(diff / 1000 / 60);
     if (p.isNaughty && diffMin >= 10) {
       p.isNaughty = false;
-      console.log(p.firstName, "removed");
+      logger.info(p.firstName, "removed");
     }
   });
 };
@@ -143,9 +145,9 @@ const detectionLoop = async () => {
   await fetchDrones();
   await updateNaughtyPilots();
   pardonPilots();
-  console.log("pilot len:", Pilots.length);
-  console.log("drone len:", Drones.length);
-  console.log("--------------");
+  logger.info("pilot len:", Pilots.length);
+  logger.info("drone len:", Drones.length);
+  logger.info("--------------");
 };
 
 const startInterval = async (callback) => {

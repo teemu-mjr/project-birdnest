@@ -121,6 +121,10 @@ const updateNaughtyPilots = async () => {
         isNaughty: true,
       });
     }
+    // keeping only 16 newest pilots cached
+    if (Pilots.length > 16) {
+      Pilots.shift();
+    }
   }
 };
 

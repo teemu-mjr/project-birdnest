@@ -151,12 +151,11 @@ const detectionLoop = async () => {
 };
 
 const startInterval = async (callback) => {
-  setInterval(async () => {
-    await detectionLoop();
-    if (callback) {
-      callback();
-    }
-  }, 2000);
+  await detectionLoop();
+  if (callback) {
+    callback();
+  }
+  setTimeout(startInterval, 2000, callback);
 };
 
 const getNaughtyPilots = () => {
